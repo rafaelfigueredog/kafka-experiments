@@ -16,9 +16,9 @@ De acordo com a documentação [[1]](https://kafka.apache.org/documentation/), A
 
 ### Casos de uso
 
-Conforme  a documentação, a essencia do Apache Kafka consistem em *streaming de eventos.*
+Conforme  a documentação, a essencia do Apache Kafka consiste em *streaming de eventos.*
 
-> ***Event streaming*** é a prática de captura de dados em tempo real a partir de alguma fonte (ex. banco de dados, sensor, dispositivos móveis, serviços em nuvem). Esses eventos sçai salvos e duraveis para posterior processamento em diferentes destinos. 
+> ***Event streaming*** é a prática de captura de dados em tempo real a partir de alguma fonte (ex. banco de dados, sensor, dispositivos móveis, serviços em nuvem). Esses eventos são salvos e duraveis para posterior processamento em diferentes destinos. 
 
 Saiba mais sobre aplicações do Apache Kafka em [[2]](https://kafka.apache.org/documentation/#intro_usage).
 
