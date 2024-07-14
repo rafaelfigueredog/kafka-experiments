@@ -1,11 +1,13 @@
 
 
-# Experimentos práticos de sistemas distribuídos envolvendo Apache Kafka.
+# Projeto prático em Sistemas Distribuídos com Apache Kafka. 
 
 ## Apresentação
 
-**Autor:** Rafael Figueredo Guimarães
-**Instituição:** Unviversidade Federal de Campina Grande - UFCG
+**Rafael Figueredo Guimarães** <br />
+**Unviversidade Federal de Campina Grande - UFCG** <br />
+**Programa de Pós-Graduação em Ciência da Computação**
+
 
 Este trabalho tem como objetivo realizar experimentos práticos com a ferramenta Apache Kafka, buscando entender suas principais aplicações e caracteristicas que envolvem a disciplina de Sistemas Distribuídos.
 
@@ -39,11 +41,33 @@ O Apache Kafka combina três elementos chave em sua dinâmica de funcionamento:
 - Interoperabilidade com outros sistemas.
 
 
-## Experimento Prático
+## Principais conceitos relacionados ao Apache Kafka. 
+
+- **Mensagem ou evento:** Um evento registra o fato de que “algo aconteceu”.
+- **Produtores:** são aplicações clientes que publicam (escrevem) eventos no Kafka.
+- **Consumidores:** são aplicações que lêem e processam esses eventos. (Produtores e consumidores são agnósticas entre si.)
+- **Tópicos:** Um tópico é semelhante a uma pasta em um sistema de arquivos e os eventos são os arquivos dessa pasta. Os eventos são organizados e armazenados de forma durável em tópicos.
+- **Broker:**  É o servidor do Kafka, responsável por receber as mensagens dos produtores, escrever as mensagens no disco (partição) e disponibilizar para os consumidores [[3]](https://blog.dp6.com.br/apache-kafka-o-que-%C3%A9-e-como-funciona-300a5736e388#:~:text=Broker%3A%20%C3%89%20o%20servidor%20do,ler%20as%20mensagens%20do%20Kafka.)
+- **Partições:** Os tópicos são particionados, o que significa que um tópico está espalhado por vários “_buckets_” localizados em diferentes brokers Kafka.
+
+
+## Como o Kafka garante alta disponibilidade?
+
+### Fator de Replicação
+
+Um das principais caracteristicas do kafka está relacionada a sua tolerancia a falhas.  As máquinas falham e muitas vezes não podemos prever quando isso vai acontecer. O Kafka foi projetado tendo a replicação como um recurso principal para resistir a essas falhas, mantendo o tempo de atividade e a precisão dos dados.
+
+> A replicação de dados ajuda a evitar a perda de dados gravando os mesmos dados em mais de um _broker_.
+
+Um fator de replicação de `1` significa que não há replicação. É usado principalmente para fins de desenvolvimento e deve ser evitado em clusters Kafka de teste e produção.
+
+Um fator de replicação de `3` é um fator de replicação comumente usado, pois fornece o equilíbrio certo entre a perda do corretor e a sobrecarga de replicação.
+
+# Experimento Prático
 
 ### Criando uma instancia local do kafka. 
 
-1. Para criar uma instancia do kafka localmente, clone este repositório. 
+1. Para criar uma instancia do kafka localmente, clone este repositório.
 
 ~~~bash
 $ git clone https://github.com/rafaelfigueredog/kafka-experiments.git
@@ -97,5 +121,21 @@ O comando acima cria um novo tópico chamado "experiment" no Apache Kafka. Esse 
 ~~~bash
 Created topic experiment.
 ~~~
+
+### Analisando parametros do nosso tópico. 
+
+1. Ainda dentro do container do kafka, o comando abaixo descreve visualizar as propriedades do nosso tópico.
+
+~~~bash
+$ kafka-topics --bootstrap-server=localhost:9092 --topic=experiment --describe
+~~~
+
+![image](https://github.com/user-attachments/assets/9180b0bb-d463-41ff-99f2-fda8d8199977)
+
+Esse comando permite a visualização do nome do tópico, indica o lider e o _fator de replicação_. 
+
+> O Apache Kafka garante alta disponibilidade de dados replicando dados por meio do fator de replicação no Kafka. O fator de replicação é o número de nós para os quais seus dados são replicados.
+
+
 
 
