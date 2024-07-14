@@ -133,9 +133,3 @@ $ kafka-topics --bootstrap-server=localhost:9092 --topic=experiment --describe
 ![image](https://github.com/user-attachments/assets/9180b0bb-d463-41ff-99f2-fda8d8199977)
 
 Esse comando permite a visualização do nome do tópico, indica o lider e o _fator de replicação_. 
-
-> O Apache Kafka garante alta disponibilidade de dados replicando dados por meio do fator de replicação no Kafka. O fator de replicação é o número de nós para os quais seus dados são replicados.
-
-
-
-
