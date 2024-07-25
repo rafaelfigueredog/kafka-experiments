@@ -88,11 +88,13 @@ $ docker compose up
 ~~~
 
 
-Após a realização dos passos acima teremos três containeiners estarão ativos: 
+Após a realização dos passos acima os seguintes containeiners estarão ativos: 
 
-1. **Kafka:** É o próprio serviço do kafka. 
+1. **Kafka_{i}:** É broker do Gafka. 
 2. **Zookeeper:** É um serviço de coordenação distribuída que ajuda a gerenciar um grande conjunto de hosts.
 3. **Confluent Control Center.**  É uma interface gráfica desenvolvida pela **Confluent** empresa que mantém o kafka.  
+4. **Schema Registry** é um processo que roda em um servidor próximo aos brokers do Kafka e fica responsável por armazenar os schemas e suas possíveis versões
+5. **Kafka Connect** é um componente gratuito e de código aberto do Apache Kafka® que serve como um hub de dados centralizado para integração simples de dados entre bancos de dados, armazenamentos de valores-chave, índices de pesquisa e sistemas de arquivos.
 
 ### Acessando o container do kafka. 
 
@@ -103,12 +105,12 @@ Após a realização dos passos acima teremos três containeiners estarão ativo
 2. Para acessar o serviço do kafka rode o seguinte commando. 
 
 ~~~bash
-$ docker exec -it kafka bash
+$ docker exec -it kafka1 bash
 ~~~
 
 ### Criando o primeiro tópico. 
 
-1. Ao acessar o container do kafka usando o comando `docker exec -it kafka bash`, execute o comando abaixo criar o primeiro tópico.
+1. Ao acessar o container do kafka usando o comando `docker exec -it kafka1 bash`, execute o comando abaixo criar o primeiro tópico.
 
 ~~~bash
 $ kafka-topics --create --topic=experiment  --bootstrap-server=localhost:9092 --partitions=3
