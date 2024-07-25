@@ -1,17 +1,17 @@
 
 
-# Projeto prático em Sistemas Distribuídos com Apache Kafka. 
 
-## Apresentação
+# Projeto prático em Sistemas Distribuídos com Apache Kafka. 
 
 **Rafael Figueredo Guimarães** <br />
 **Unviversidade Federal de Campina Grande - UFCG** <br />
 **Programa de Pós-Graduação em Ciência da Computação**
 
+## Objetivo
 
-Este trabalho tem como objetivo realizar experimentos práticos com a ferramenta Apache Kafka, buscando entender suas principais aplicações e caracteristicas que envolvem a disciplina de Sistemas Distribuídos.
-
-## Apache Kafka: Overview
+Este trabalho tem como objetivo apresentar um estudo relacionando conceitos de **Sistemas Distribuídos** e a ferramenta **Apache Kafka**. O trabalho está subdividido em 2 seções, a primeira seção apresenta um breve resumo teorico sobre o Kafka e em seguida alguns experimentos práticos envolvendo tolerancia a falhas, replicação em sistemas distribuídos, eleição de lider. 
+ 
+## Apache Kafka: Fundamentação Teorica
 
 ### Apache Kafka: Definição
 
@@ -41,7 +41,7 @@ O Apache Kafka combina três elementos chave em sua dinâmica de funcionamento:
 - Interoperabilidade com outros sistemas.
 
 
-## Principais conceitos relacionados ao Apache Kafka. 
+### Conceitos relacionados ao Apache Kafka. 
 
 - **Mensagem ou evento:** Um evento registra o fato de que “algo aconteceu”.
 - **Produtores:** são aplicações clientes que publicam (escrevem) eventos no Kafka.
@@ -51,9 +51,9 @@ O Apache Kafka combina três elementos chave em sua dinâmica de funcionamento:
 - **Partições:** Os tópicos são particionados, o que significa que um tópico está espalhado por vários “_buckets_” localizados em diferentes brokers Kafka.
 
 
-## Como o Kafka garante alta disponibilidade?
+### Como o Kafka garante alta disponibilidade?
 
-### Fator de Replicação
+#### Fator de Replicação
 
 Um das principais caracteristicas do kafka está relacionada a sua tolerancia a falhas.  As máquinas falham e muitas vezes não podemos prever quando isso vai acontecer. O Kafka foi projetado tendo a replicação como um recurso principal para resistir a essas falhas, mantendo o tempo de atividade e a precisão dos dados.
 
@@ -63,7 +63,7 @@ Um fator de replicação de `1` significa que não há replicação. É usado pr
 
 Um fator de replicação de `3` é um fator de replicação comumente usado, pois fornece o equilíbrio certo entre a perda do corretor e a sobrecarga de replicação.
 
-# Experimento Prático
+## Experimentos Práticos
 
 ### Criando uma instancia local do kafka. 
 
@@ -99,3 +99,43 @@ Após a realização dos passos acima os seguintes containeiners estarão ativos
 
 O arquivo `docker-compose.yml` utilizado como referencia é da própria mantededora do Apache Kafka. [all in one confluent plaftorm.](https://github.com/confluentinc/cp-all-in-one/blob/7.5.0-post/cp-all-in-one/docker-compose.yml) Partindo dessa base foram criados mais 2 instancias de brokers para realização de experimentos com replicação. 
 
+
+### Experimento 1: Simulando falhas no broker controller? 
+ 
+Um cluster `Kafka` pode ter vários *brokers*, mas apenas um *broker* pode ser o controlador. O processo de eleger um *broker* entre a lista de corretores em um cluster para ser o controlador ativo é chamado de **eleição de líder.**
+
+![image](https://github.com/user-attachments/assets/0fa0fc7b-fc50-4e1f-a052-e083a877f5e0)
+
+O `Zookeeper` deve fazer a eleição do líder quando o corretor controlador estiver inativo. O corretor controlador, por sua vez, é responsável por eleger os líderes da partição, garantindo que as leituras e gravações dos clientes no Kafka ainda possam acontecer.
+
+1. Primeiro passo é garantir que todos os containers estão ativos `docker compose ps`
+2. Em seguida abra o control center no `http://localhost:9021` e verifique o qual é o id do active controller, no menu `brokers`
+3. Em seguida execute `docker compose stop <nome-do-container-broker-ativo>`
+4. Após esse processo é experado que tenhamos o seguinte resultado. 
+
+![image](https://github.com/user-attachments/assets/835583d0-7d73-4e8b-bb86-d54c53635345)
+
+
+### Experimento 2: Simulando falhas no broker controller e no Zookeeper.  
+
+Falhas no Kafka podem ocorrer se o **broker ativo** e o **Zookeeper** tiverem problemas. O Zookeeper é responsável por eleger um novo controller, e se ele estiver inativo, não haverá eleição. Isso impede que o líder da partição do tópico identifique as réplicas que devem se tornar o novo líder. Como resultado, podem ocorrer falhas e corrupção de dados. No aquivo desse experimento temos apenas um uma instancia do Zookeeper ativo, no entanto, esse problema pode ser contornado criando [replicas do zookeeper](https://hub.docker.com/_/zookeeper). 
+
+Para realizar o experimento vamos realizar os seguintes passos.
+
+1. Primeiro passo é garantir que todos os containers estão ativos `docker compose ps`
+2. Em seguida abra o control center no `http://localhost:9021` e verifique o qual é o id do active controller, no menu `brokers`
+3. Em seguida execute `docker compose stop <nome-do-container-broker-ativo>`
+4. Em seguida execute `docker compose stop <nome-do-container-zookeeper>`
+5. Após essas ações, mesmo com todos os outros serviços ativos, obtive o seguinte log do control center.
+
+> Current cluster went offiline a minute ago.
+
+### Experimento 3: Simulando falhas no Zookeeper.  
+
+Enquanto o broker controller estiver ativo, mesmo que ocorra uma falha no Zookeeper o serviço do Kafka permanece ativo. 
+
+Para realizar o experimento vamos realizar os seguintes passos.
+
+1. Primeiro passo é garantir que todos os containers estão ativos `docker compose ps`
+2. Em seguida execute `docker compose stop <nome-do-container-zookeeper>`
+5. Após essas ações, note que ainda é possível produzir mensagens através o control center ou de alguma aplicação cliente.
