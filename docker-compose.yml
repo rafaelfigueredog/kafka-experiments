@@ -200,6 +200,7 @@ services:
     depends_on:
       - broker1
       - broker2
+      - broker3
       - connect
       - ksqldb-server
     entrypoint: /bin/sh
@@ -213,6 +214,7 @@ services:
       - ksqldb-server
       - broker1
       - broker2
+      - broker3
       - schema-registry
       - connect
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
