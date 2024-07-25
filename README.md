@@ -99,6 +99,10 @@ Após a realização dos passos acima os seguintes containeiners estarão ativos
 
 O arquivo `docker-compose.yml` utilizado como referencia é da própria mantededora do Apache Kafka. [all in one confluent plaftorm.](https://github.com/confluentinc/cp-all-in-one/blob/7.5.0-post/cp-all-in-one/docker-compose.yml) Partindo dessa base foram criados mais 2 instancias de brokers para realização de experimentos com replicação. 
 
+### Criando um novo tópico usando control center da confluent. 
+
+1. Abrir console do control-center `http://localhost:9021`
+3. Criar um tópico na pagina `Topics` com configurações default (essa configuração já habilita um nível equilibrado entre disponibilidade e durabilidade, com fator de replicação `3`.
 
 ### Experimento 1: Simulando falhas no broker controller? 
  
